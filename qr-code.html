@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>For Sky — QR Code Card</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+  
+  <!-- QR Code Styling Library -->
+  <script src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
+
+  <style>
+    :root {
+      --sky-pink-light: #fff5f8;
+      --sky-pink-mist: #ffe8ee;
+      --baby-pink-soft: #ffd2dc;
+      --baby-pink-mid: #ffb3c6;
+      --baby-pink-bright: #ff85a1;
+      --baby-pink-accent: #f7557a;
+      --baby-pink-deep: #c43860;
+      --baby-pink-border: #992346;
+      
+      --text-dark: #3d0c1e;
+      --text-muted: #6e2c45;
+      --white-pure: #ffffff;
+      
+      --font-pixel-heading: 'Press Start 2P', monospace, cursive;
+      --font-pixel-body: 'Pixelify Sans', monospace, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      image-rendering: pixelated;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(180deg, #ffccd5 0%, #ffe5ec 50%, #fff0f5 100%);
+      font-family: var(--font-pixel-body);
+      color: var(--text-dark);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2.5rem 1rem 4rem;
+    }
+
+    .container {
+      max-width: 520px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 1.8rem;
+    }
+
+    .pixel-panel {
+      background: rgba(255, 245, 248, 0.96);
+      border: 4px solid var(--baby-pink-bright);
+      box-shadow: 
+        0 0 0 2px var(--baby-pink-border),
+        6px 6px 0px rgba(153, 35, 70, 0.35),
+        inset 3px 3px 0 var(--white-pure),
+        inset -3px -3px 0 var(--baby-pink-soft);
+      padding: 1.5rem 1.8rem;
+    }
+
+    .pixel-panel h2 {
+      font-family: var(--font-pixel-heading);
+      font-size: 0.85rem;
+      color: var(--baby-pink-deep);
+      margin-bottom: 0.6rem;
+      line-height: 1.4;
+    }
+
+    .pixel-panel p {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      margin-bottom: 1.2rem;
+    }
+
+    .input-group {
+      display: flex;
+      gap: 8px;
+    }
+
+    .url-input {
+      flex: 1;
+      padding: 12px 14px;
+      border: 3px solid var(--baby-pink-bright);
+      background: var(--white-pure);
+      color: var(--text-dark);
+      font-family: var(--font-pixel-body);
+      font-size: 1.15rem;
+      outline: none;
+      box-shadow: 2px 2px 0 var(--baby-pink-border);
+    }
+
+    .url-input:focus {
+      border-color: var(--baby-pink-accent);
+    }
+
+    .pixel-btn {
+      padding: 12px 20px;
+      background: var(--baby-pink-accent);
+      border: 3px solid var(--white-pure);
+      color: var(--white-pure);
+      font-family: var(--font-pixel-heading);
+      font-size: 0.65rem;
+      cursor: pointer;
+      box-shadow: 3px 3px 0 var(--baby-pink-border), inset 2px 2px 0 var(--white-pure);
+      transition: all 0.1s steps(2);
+    }
+
+    .pixel-btn:hover {
+      background: #ff6b8e;
+      transform: translate(-1px, -1px);
+      box-shadow: 4px 4px 0 var(--baby-pink-border);
+    }
+
+    .pixel-btn:active {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0 var(--baby-pink-border);
+    }
+
+    /* QR Card */
+    .qr-card {
+      background: #fff8fa;
+      border: 5px solid var(--baby-pink-bright);
+      box-shadow: 
+        0 0 0 3px var(--baby-pink-border),
+        8px 8px 0px rgba(153, 35, 70, 0.35),
+        inset 4px 4px 0 var(--white-pure),
+        inset -4px -4px 0 var(--baby-pink-soft);
+      padding: 2.2rem 2rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .qr-tag {
+      font-family: var(--font-pixel-heading);
+      font-size: 0.65rem;
+      color: var(--baby-pink-deep);
+      letter-spacing: 1.5px;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .qr-title {
+      font-family: var(--font-pixel-heading);
+      font-size: 1.35rem;
+      color: var(--text-dark);
+      text-shadow: 3px 3px 0 var(--baby-pink-soft);
+      margin-bottom: 8px;
+    }
+
+    .qr-subtitle {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      margin-bottom: 1.4rem;
+    }
+
+    #qrContainer {
+      background: #ffffff;
+      padding: 16px;
+      border: 4px solid var(--baby-pink-bright);
+      box-shadow: 4px 4px 0 var(--baby-pink-border);
+      margin-bottom: 1.5rem;
+    }
+
+    .qr-instruction {
+      font-size: 1.15rem;
+      color: var(--text-dark);
+      max-width: 340px;
+      margin-bottom: 1.4rem;
+      line-height: 1.5;
+    }
+
+    .qr-footer-msg {
+      font-family: var(--font-pixel-heading);
+      font-size: 0.78rem;
+      color: var(--baby-pink-deep);
+      margin-bottom: 1.5rem;
+    }
+
+    .buttons-row {
+      display: flex;
+      gap: 12px;
+    }
+
+    @media print {
+      body {
+        background: #fff;
+        color: #000;
+        padding: 0;
+      }
+      .pixel-panel, .buttons-row {
+        display: none;
+      }
+      .qr-card {
+        box-shadow: none;
+        border: 2px solid #000;
+        background: #fff;
+        color: #000;
+      }
+      .qr-title {
+        color: #000;
+        text-shadow: none;
+      }
+      .qr-subtitle, .qr-instruction, .qr-footer-msg {
+        color: #333;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="pixel-panel">
+      <h2>QR CODE CARD FOR SKY</h2>
+      <p>Enter your game link to generate a baby pink pixel card.</p>
+      <div class="input-group">
+        <input type="text" id="urlInput" class="url-input" value="http://localhost:8080/">
+        <button id="updateQrBtn" class="pixel-btn">UPDATE</button>
+      </div>
+    </div>
+
+    <div class="qr-card">
+      <span class="qr-tag">PARA KAY SKY</span>
+      <h1 class="qr-title">FOR SKY</h1>
+      <p class="qr-subtitle">A soft pink pixel flight and a letter written for you</p>
+
+      <div id="qrContainer"></div>
+
+      <p class="qr-instruction">
+        Scan this code to start your flight through the pink sky.
+      </p>
+
+      <div class="qr-footer-msg">
+        MAHAL NA MAHAL KITA, SKY
+      </div>
+
+      <div class="buttons-row">
+        <button id="downloadQrBtn" class="pixel-btn">SAVE QR</button>
+        <button onclick="window.print()" class="pixel-btn">PRINT</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let qrCode;
+
+    function renderQR(url) {
+      const container = document.getElementById('qrContainer');
+      container.innerHTML = '';
+
+      qrCode = new QRCodeStyling({
+        width: 240,
+        height: 240,
+        type: 'canvas',
+        data: url,
+        dotsOptions: {
+          color: '#3d0c1e',
+          type: 'square'
+        },
+        cornersSquareOptions: {
+          color: '#c43860',
+          type: 'square'
+        },
+        cornersDotOptions: {
+          color: '#ff85a1',
+          type: 'square'
+        },
+        backgroundOptions: {
+          color: '#ffffff'
+        }
+      });
+
+      qrCode.append(container);
+    }
+
+    document.getElementById('updateQrBtn').addEventListener('click', () => {
+      const url = document.getElementById('urlInput').value.trim();
+      if (url) renderQR(url);
+    });
+
+    document.getElementById('downloadQrBtn').addEventListener('click', () => {
+      if (qrCode) qrCode.download({ name: 'for-sky-qr', extension: 'png' });
+    });
+
+    renderQR(document.getElementById('urlInput').value);
+  </script>
+</body>
+</html>
